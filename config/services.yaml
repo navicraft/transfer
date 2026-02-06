@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Controllers
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    # Event Listeners
+    App\EventListener\:
+        resource: '../src/EventListener/'
+        tags:
+            - { name: kernel.event_listener }
+
+    # Authentication Listener with API Key
+    App\EventListener\AuthenticationListener:
+        arguments:
+            $authApiKey: '%env(AUTH_API_KEY)%'
+
+    # Rate Limiter Factory
+    transfer_api_limiter:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        arguments:
+            - sliding_window
+            - limit: 10
+              interval: '1 minute'
+            - '@cache.app'

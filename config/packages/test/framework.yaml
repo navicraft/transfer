@@ -1,0 +1,19 @@
+services:
+    test.rate_limiter.storage:
+        class: Symfony\Component\RateLimiter\Storage\CacheStorage
+        arguments: ['@cache.app']
+
+framework:
+    test: true
+    session:
+        storage_factory_id: session.storage.factory.mock_file
+
+    cache:
+        app: cache.adapter.array
+
+    rate_limiter:
+        transfer_api:
+            policy: 'sliding_window'
+            limit: 10000
+            interval: '1 minute'
+            storage_service: test.rate_limiter.storage

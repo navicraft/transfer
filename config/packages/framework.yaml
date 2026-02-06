@@ -1,0 +1,35 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    http_method_override: false
+    handle_all_throwables: true
+    php_errors:
+        log: true
+
+    # Redis-backed cache for rate limiting and general caching
+    cache:
+        app: cache.adapter.redis
+        default_redis_provider: '%env(REDIS_URL)%'
+
+    # Distributed locking with Redis
+    lock: '%env(LOCK_DSN)%'
+
+    # Async messaging with Redis
+    messenger:
+        transports:
+            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+        routing:
+            'App\Message\ProcessTransferMessage': async
+
+    # Redis-backed rate limiting (distributed across all servers)
+    rate_limiter:
+        transfer_api:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 minute'
+            storage_service: rate_limiter.storage.redis
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file

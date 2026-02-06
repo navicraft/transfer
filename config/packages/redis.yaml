@@ -1,0 +1,18 @@
+services:
+    # ... existing services
+
+    # Redis-backed rate limiter storage
+    rate_limiter.storage.redis:
+        class: Symfony\Component\RateLimiter\Storage\CacheStorage
+        arguments: ['@cache.app']
+
+    # Redis client for idempotency and distributed locking
+    Predis\Client:
+        arguments:
+            - '%env(REDIS_URL)%'
+            - { prefix: 'transfer_api:' }
+
+    # Alias for easier dependency injection
+    redis.client:
+        alias: Predis\Client
+        public: true

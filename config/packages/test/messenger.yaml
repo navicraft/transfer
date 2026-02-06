@@ -1,0 +1,5 @@
+framework:
+    messenger:
+        transports:
+            # Force async transport to be synchronous in tests
+            async: 'sync://'

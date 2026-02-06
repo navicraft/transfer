@@ -25,6 +25,8 @@ A secure, production-ready fund transfer API built with **PHP 8.4**, **Symfony 7
 - ✅ **Full Test Coverage** - Unit and integration tests for all scenarios
 - ✅ **Docker Support** - Easy deployment with Docker Compose (PHP, Nginx, MySQL, Redis)
 
+
+
 ## 🏗 Architecture
 
 ### Middleware
@@ -247,3 +249,80 @@ Environment variables are managed in `.env`.
 
 ### License
 Proprietary
+
+---
+
+## ⏱️ Time & Tools
+
+- **Time spent:** ~1 hour
+- **AI tools used:** Antigravity (Gemini and Sonnet models) with Pro subscription.
+
+### 🤖 Prompt Used
+<details>
+<summary>Click to view the original prompt</summary>
+
+Build a secure fund transfer API in PHP 8.4 + MYSQL + Symfony 8 with following points:
+- Fire events on transfer completion and failure for other parts to subscribe
+- Make use of middlewares (like rate limiting) and custom request class for validation of requests
+- Prefer using DTOs as compared to data arrays
+- Make use of database migrations and ORM -> doctrine
+- Create helper object classes for Money and Currency
+- Transfers are created in an asynchronous manner using messenger (with sync channel for now)
+- Idempotency key header validation for checking duplicates
+- Use pessimistic DB locking on accounts during transfer
+- Auth check using env hardcoded auth key in header
+- Make use of enums data structure for status, currencies
+- No UI, users and sessions are required
+- Make use of docker for easier deployment
+- Apply SOLID principles and DDD
+- Create a service class for transferring: TransferService::doTransfer(source account, dest account, money, idempotencyKey, description?)
+- Validations: should be same currency, don’t allow self-transfer, insufficient funds in source, source/target account exists
+- Use double entry book-keeping
+- Use DB transaction during transfer processing - single flush
+- Add a GET /api/health endpoint that checks server+database connectivity
+- Use repository pattern with ORM, service classes for business logic and keep controllers thin
+- Add unit tests and integration (end to end) tests - all the possible cases and edge cases
+- The DB should be able to connect from outside via tableplus
+
+**Database schema:**
+* accounts
+    * id - auto increment
+    * uuid - uuidv4, unique, non null
+    * account_number - string, auto generated
+    * holder_name - string, full name
+    * currency - iso3 code
+    * balance - int, in cents, signed
+    * status - enum: active,inactive,blocked,closed
+    * created_at - date time
+    * updated_at - date time
+    * version- int, for optimistic locking
+    * Indexes on above columns: uuid, account_number, status, currency
+* transactions
+    * id - auto increment
+    * uuid - uuidv4, unique, non null
+    * account_id - foreign key accounts->id
+    * amount - int, in cents, signed
+    * currency - iso3 code
+    * status - enum: pending,completed,failed
+    * description - string, nullable
+    * idempotency_key - string, unique
+    * related_transaction_id -  foreign key transactions->id
+    * created_at - date time
+    * completed_at - date time
+    * Indexes: uuid, account_id, status, idempotency_key, related_transaction_id, created_at, completed_at, (account_id, status)
+
+**Request input:**
+POST /api/v1/transfers
+{
+    "source_account_uuid”: required,
+    "destination_account_uuid”: required,
+    "amount": required,
+    "description": optional
+}
+
+**Response 201:**
+{
+    "status": "success",
+    "message": "Transfer processed"
+}
+</details>

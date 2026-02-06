@@ -2,26 +2,28 @@
 
 A secure, production-ready fund transfer API built with **PHP 8.4**, **Symfony 7.4**, **MySQL 8.0**, and **Redis** for high performance and scalability. This API follows **SOLID principles** and **Domain-Driven Design (DDD)**.
 
+![alt text](image.png)
+
 ## 🚀 Features
 
 ### Core Banking
-✅ **Double-Entry Bookkeeping** - Every transfer creates both debit and credit transactions
-✅ **Pessimistic Locking** - Prevents race conditions using Redis distributed locks (10x faster than DB locks)
-✅ **Idempotency** - Duplicate requests are safely rejected using Redis-baked idempotency keys (50x faster)
-✅ **Event-Driven Architecture** - Transfer completion/failure events for extensibility
-✅ **Comprehensive Validation** - Currency matching, account status, sufficient funds, self-transfer prevention
+- ✅ **Double-Entry Bookkeeping** - Every transfer creates both debit and credit transactions
+- ✅ **Pessimistic Locking** - Prevents race conditions using Redis distributed locks (10x faster than DB locks)
+- ✅ **Idempotency** - Duplicate requests are safely rejected using Redis-baked idempotency keys (50x faster)
+- ✅ **Event-Driven Architecture** - Transfer completion/failure events for extensibility
+- ✅ **Comprehensive Validation** - Currency matching, account status, sufficient funds, self-transfer prevention
 
 ### Performance & Security
-✅ **Rate Limiting** - Distributed rate limiting via Redis (10 requests per minute)
-✅ **Async Processing** - Transfers processed in background via Symfony Messenger with Redis transport
-✅ **Type Safety** - Enums for status and currency, DTOs for requests, Value Objects for Money
-✅ **API Key Authentication** - Header-based authentication for all critical endpoints
+- ✅ **Rate Limiting** - Distributed rate limiting via Redis (10 requests per minute)
+- ✅ **Async Processing** - Transfers processed in background via Symfony Messenger with Redis transport
+- ✅ **Type Safety** - Enums for status and currency, DTOs for requests, Value Objects for Money
+- ✅ **API Key Authentication** - Header-based authentication for all critical endpoints
 
 ### Infrastructure
-✅ **Database Migrations** - Version-controlled schema changes with Doctrine
-✅ **Health Check Endpoint** - Monitor server, database, and Redis connectivity
-✅ **Full Test Coverage** - Unit and integration tests for all scenarios
-✅ **Docker Support** - Easy deployment with Docker Compose (PHP, Nginx, MySQL, Redis)
+- ✅ **Database Migrations** - Version-controlled schema changes with Doctrine
+- ✅ **Health Check Endpoint** - Monitor server, database, and Redis connectivity
+- ✅ **Full Test Coverage** - Unit and integration tests for all scenarios
+- ✅ **Docker Support** - Easy deployment with Docker Compose (PHP, Nginx, MySQL, Redis)
 
 ## 🏗 Architecture
 
